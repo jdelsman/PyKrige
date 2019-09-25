@@ -115,6 +115,9 @@ class OrdinaryKriging:
         weights will be applied. Default is False. (Kitanidis suggests that the
         values at smaller lags are more important in fitting a variogram model,
         so the option is provided to enable such weighting.)
+    cutoff_distance : float or None
+        Maximum distance for variogram calculation, larger distances are ignored. 
+        If None, all distances included 
     anisotropy_scaling : float, optional
         Scalar stretching value to take into account anisotropy.
         Default is 1 (effectively no stretching).
@@ -158,9 +161,9 @@ class OrdinaryKriging:
 
     def __init__(self, x, y, z, variogram_model='linear',
                  variogram_parameters=None, variogram_function=None, nlags=6,
-                 weight=False, anisotropy_scaling=1.0, anisotropy_angle=0.0,
-                 verbose=False, enable_plotting=False, enable_statistics=False,
-                 coordinates_type='euclidean'):
+                 weight=False, cutoff_distance=None, anisotropy_scaling=1.0, 
+                 anisotropy_angle=0.0,verbose=False, enable_plotting=False, 
+                 enable_statistics=False,coordinates_type='euclidean'):
 
         # Code assumes 1D input arrays of floats. Ensures that any extraneous
         # dimensions don't get in the way. Copies are created to avoid any
@@ -236,7 +239,8 @@ class OrdinaryKriging:
                                                    self.Y_ADJUSTED)).T,
                                         self.Z, self.variogram_model, vp_temp,
                                         self.variogram_function, nlags,
-                                        weight, self.coordinates_type)
+                                        weight, self.coordinates_type,
+                                        cutoff_distance)
 
         if self.verbose:
             print("Coordinates type: '%s'" % self.coordinates_type, '\n')
@@ -402,7 +406,8 @@ class OrdinaryKriging:
         ax.plot(self.lags,
                 self.variogram_function(self.variogram_model_parameters,
                                         self.lags), 'k-')
-        plt.show()
+        #plt.show()
+        return fig,ax
 
     def get_variogram_points(self):
         """Returns both the lags and the variogram function evaluated at each
