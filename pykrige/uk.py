@@ -116,6 +116,9 @@ class UniversalKriging:
         (Kitanidis suggests that the values at smaller lags are more
         important in fitting a variogram model, so the option is provided
         to enable such weighting.)
+    cutoff_distance : float or None
+        Maximum distance for variogram calculation, larger distances are ignored. 
+        If None, all distances included 
     anisotropy_scaling : float, optional
         Scalar stretching value to take into account anisotropy.
         Default is 1 (effectively no stretching).
@@ -193,9 +196,9 @@ class UniversalKriging:
 
     def __init__(self, x, y, z, variogram_model='linear',
                  variogram_parameters=None, variogram_function=None, nlags=6,
-                 weight=False, anisotropy_scaling=1., anisotropy_angle=0.,
-                 drift_terms=None, point_drift=None, external_drift=None,
-                 external_drift_x=None, external_drift_y=None,
+                 weight=False, cutoff_distance=None, anisotropy_scaling=1., 
+                 anisotropy_angle=0., drift_terms=None, point_drift=None, 
+                 external_drift=None, external_drift_x=None, external_drift_y=None,
                  specified_drift=None, functional_drift=None,
                  verbose=False, enable_plotting=False):
 
